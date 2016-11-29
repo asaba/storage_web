@@ -5,7 +5,7 @@ Created on 28/giu/2016
 '''
 
 import os
-from models import Tdays
+from models import BackendUsed
 
 from django.forms import Form
 from django import forms
@@ -19,21 +19,20 @@ from captcha.fields import ReCaptchaField
 class SelectBEForm(Form):
     def __init__(self, *args, **kwargs):
         super(SelectBEForm, self).__init__(*args, **kwargs)
-        self.fields['codBE'] = forms.CharField(widget=forms.Select(choices=self.return_BE_list()), label="Back End")
+        self.fields['codBE'] = forms.CharField(widget=forms.Select(choices=self.return_be_list()), label="Back End")
         self.fields['pagination_number'] = forms.IntegerField(
             widget=forms.Select(choices=[(x, str(x)) for x in range(25, 501, 25)]), label="Results for page")
 
-    def return_BE_list(self):
-        BE_list = Tdays.objects.all().order_by().values("backend").annotate(n=Count("pk"))
+    def return_be_list(self):
+        be_list_choise = [(x.backend, x.backend) for x in BackendUsed.objects.all().order_by("backend")]
+        #BE_list = Tdays.objects.all().order_by().values("backend").annotate(n=Count("pk"))
         # BE_list = list(set([t.backend for t in Tdays.objects.all()]))
-        BE_list_choise = []
-        for i in range(len(BE_list)):
-            BE_list_choise.append((BE_list[i]["backend"], BE_list[i]["backend"]))
-        return BE_list_choise
+        #BE_list_choise = []
+        #for i in range(len(BE_list)):
+        #    BE_list_choise.append((BE_list[i]["backend"], BE_list[i]["backend"]))
+        return be_list_choise
 
-    codBE = forms.CharField(widget=forms.Select(choices=[(be["backend"], be["backend"]) for be in
-                                                         Tdays.objects.all().order_by().values("backend").annotate(
-                                                             n=Count("pk"))]), label="Back End")
+    codBE = forms.CharField(widget=forms.Select(choices=self.return_be_list(), label="Back End")
     pagination_number = forms.IntegerField(widget=forms.Select(choices=[(x, str(x)) for x in range(25, 501, 25)]),
                                            label="Results for page")
     source_name = forms.CharField(required=False, max_length=100, label="Source Name")
