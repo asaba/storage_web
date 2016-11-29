@@ -24,7 +24,7 @@ class SelectBEForm(Form):
             widget=forms.Select(choices=[(x, str(x)) for x in range(25, 501, 25)]), label="Results for page")
 
     def return_be_list(self):
-        be_list_choise = [(x.backend, x.backend) for x in BackendUsed.objects.all().order_by("backend")]
+        be_list_choise = [(x.backend, x.backend) for x in BackendUsed.objects.all()]
         # BE_list = Tdays.objects.all().order_by().values("backend").annotate(n=Count("pk"))
         # BE_list = list(set([t.backend for t in Tdays.objects.all()]))
         # BE_list_choise = []
@@ -33,7 +33,7 @@ class SelectBEForm(Form):
         return be_list_choise
 
     codBE = forms.CharField(
-        widget=forms.Select(choices=[(x.backend, x.backend) for x in BackendUsed.objects.all().order_by("backend")]),
+        widget=forms.Select(choices=[(x.backend, x.backend) for x in BackendUsed.objects.all()]),
         label="Back End")
     pagination_number = forms.IntegerField(widget=forms.Select(choices=[(x, str(x)) for x in range(25, 501, 25)]),
                                            label="Results for page")

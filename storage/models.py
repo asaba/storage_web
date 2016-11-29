@@ -189,6 +189,7 @@ class Tdays(models.Model):
 
 
 class BackendUsed(models.Model):
+    id = models.IntegerField(primary_key=True)
     project_name = models.CharField(db_column='Project_Name', max_length=255, blank=True)  # Field name made lowercase.
     backend = models.CharField(max_length=32)
 
