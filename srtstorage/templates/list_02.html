@@ -1,0 +1,111 @@
+{% extends "index.html" %}
+{% block title %}Observation data{% endblock title%}
+{% block subtitle %}{{user}}{% endblock subtitle%}
+
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+
+{% block content %}
+<div class="CSSTableGenerator" >
+                <table >
+                    <tr>
+                        <td>
+    filename
+                        </td>
+                        <td >
+    date
+                        </td>
+                        <td >
+    source
+                        </td>
+                        <td >
+    project name
+                        </td>
+                        <td >
+    mjd start
+                        </td>
+                        <td >
+    mjd stop
+                        </td>
+                        <td >
+    frequency
+                        </td>
+                        <td >
+    bandwidth
+                        </td>
+                        <td >
+    local oscillator
+                        </td>
+                        <td >
+    samplerate
+                        </td>
+                        <td >
+    receiver
+                        </td>
+                        <td >
+    backend
+                        </td>
+                        <td >
+    source ra
+                        </td>
+                        <td >
+    source dec
+                        </td>
+                    </tr>
+                    
+{% for tday in tdays.object_list %}
+<tr>
+                        <td >
+                            <a href="{{ STATIC_URL }}{{STORAGE_FOLDER}}{{ tday.filename }}">Download</a>
+                        </td>
+                        <td>
+    {{ tday.date }}
+
+                        </td>
+                        <td>
+    {{ tday.source }}
+                        </td>
+                        <td>
+    {{ tday.project_name }}
+                        </td>
+                        <td>
+    {{ tday.mjd_start }}
+                        </td>
+                        <td>
+    {{ tday.mjd_stop }}
+                        </td>
+                        <td>
+    {{ tday.frequency }}
+                        </td>
+                        <td>
+    {{ tday.bandwidth }}
+                        </td>
+                        <td>
+    {{ tday.localoscillator }}
+                        </td>
+                        <td>
+    {{ tday.samplerate }}
+                        </td>
+                        
+                        <td>
+    {{ tday.receiver }}
+                        </td>
+                        <td>
+    {{ tday.backend }}
+                        </td>
+                        <td>
+    {{ tday.source_ra }}
+                        </td>
+                        <td>
+    {{ tday.source_dec }}
+                        </td>
+                    </tr>
+{% endfor %}
+                </table>
+            </div>
+
+{# The following renders the pagination html #}
+<div id="pagination">
+    {{ tdays.render }}
+</div>
+{% endblock content %}

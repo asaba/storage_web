@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+{% load django_tables2 %}
+{% block title %}Observation data{% endblock title%}
+{% block subtitle %}{{user}}{% endblock subtitle%}
+
+
+{% block content %}
+
+<form action="/multipledownload/" method="post">
+    {% csrf_token %}
+    {% render_table table %}
+    <input type="submit"  name="download" value="Download Selection"/>
+    {% if message %}
+        <font color="red">{{message}}</font>
+    {% endif %}
+</form>
+<form action="/choisebe/" method="post">
+    <input type="submit"  name="newquey" value="New Query"/>
+    {% csrf_token %}
+</form>
+
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block title %}Authentication{% endblock title%}
+{% block subtitle %}Login{% endblock subtitle%}
+{% block content %}
+    <div id="login">
+        <form class="form-horizontal" name="ChoiseBEForm" action="/list/" method="post">
+        {% csrf_token %}
+        <table>
+        {{choise_be_form}}
+        </table>
+        <input type="submit" value="Submit" />
+        </form>
+    </div>
+{% endblock content %}

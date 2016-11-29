@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+{% block title %}Authentication{% endblock title%}
+{% block subtitle %}Login{% endblock subtitle%}
+
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+{% block content %}
+    {{ state }}
+    <form action="/login/" method="post">
+        {% csrf_token %}
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% endif %}
+        username: 
+        <input type="text" name="username" value="{{ username}}" /><br />
+        password:
+        <input type="password" name="password" value="" /><br />
+
+        <input type="submit" value="Log In" />
+    </form>
+{% endblock content %}
