@@ -28,7 +28,7 @@ class SelectBEForm(Form):
         for x in BackendUsed.objects.all():
             if (x.backend, x.backend) not in be_list_choise:
                 be_list_choise.append((x.backend, x.backend))
-        be_list_choise.append((len(self.initial["projects"]), len(self.initial["projects"])))
+        be_list_choise.append((len(self.initial["backends"]), len(self.initial["backends"])))
         #be_list_choise = [(x.backend, x.backend) for x in BackendUsed.objects.all().filter(project_name__in=self.initial["projects"])]
         #be_list_choise = [(x.backend, x.backend) for x in                           BackendUsed.objects.all()]
         # BE_list = Tdays.objects.all().order_by().values("backend").annotate(n=Count("pk"))
