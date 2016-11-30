@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.context_processors import csrf
 from django.db.models import Q
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
-from models import Tdays, AuthUserGroups
+from models import Tdays, AuthUserGroups, BackendUsed
 from django.contrib.auth.decorators import login_required
 from django_tables2 import RequestConfig
 from tables import TdaysTable_short
@@ -297,11 +297,12 @@ def listing(request, message=None):
             request.session["pointing_position_dec"] = pointing_position_dec
             request.session["pointing_position_radius"] = pointing_position_radius
         else:
-            projects = []
-            for p in AuthUserGroups.objects.all().filter(user=request.user):
-                if p.group not in projects:
-                    projects.append(p.group)
-            ChoiseBEForm = SelectBEForm(initial={"projects" : projects})
+            backends = []
+            for g in AuthUserGroups.objects.all().filter(user=request.user):
+                for p in BackendUsed.objects.all().filter(project_name=g.group.name):
+                    if p.backend not in backends:
+                        backends.append(p.backend)
+            ChoiseBEForm = SelectBEForm(initial={"backends" : backends})
             return render(request, 'select_BE.html', {'ChoiseBEForm': ChoiseBEForm})
 
     user = request.user
