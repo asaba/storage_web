@@ -53,7 +53,7 @@ def fitslink_list(request, fits_file_id_list):
             for filename in builddirectoryfileslist(file_directory):
                 totalsize += os.path.getsize(filename)
 
-        if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES:
+        if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 0:
             return listing(request, message="Too many observations selected. (Max 12GB before compression)")
         stream = StringIO()
         temp_zip_file = zipfile.ZipFile(stream, 'w')
@@ -292,7 +292,7 @@ def listing(request, message=None):
             request.session["pointing_position_radius"] = pointing_position_radius
         else:
             backends = []
-            ChoiseBEForm = SelectBEForm(initial={"backends" : backendused(request.user)})
+            ChoiseBEForm = SelectBEForm(initial={"backends": backendused(request.user)})
             return render(request, 'select_BE.html', {'ChoiseBEForm': ChoiseBEForm})
 
     user = request.user
@@ -309,7 +309,7 @@ def listing(request, message=None):
             if frequency_min >= 0 and frequency_max > 0 <= frequency_max:
                 groupfilter = groupfilter & Q(frequency__range=(frequency_min, frequency_max))
             if (pointing_position_ra is not None) and (pointing_position_dec is not None) and (
-                pointing_position_radius is not None):
+                        pointing_position_radius is not None):
                 # calculate range position
                 min_pointing_position_ra = pointing_position_ra - pointing_position_radius
                 max_pointing_position_ra = pointing_position_ra + pointing_position_radius
@@ -322,14 +322,29 @@ def listing(request, message=None):
             paths = {}
             tmp_dir = ""
             for item in Tdays.objects.filter(groupfilter):
-                tmp_dir = os.path.dirname(item.filename)
-                if tmp_dir in paths:
-                    pass
+                if item.filename.split(".")[-1] == "fits":
+                    # if file is a fits file groups in directory
+                    tmp_dir = os.path.dirname(item.filename)
+                    if tmp_dir in paths:
+                        pass
+                    else:
+                        paths[tmp_dir] = True
+                        wanted_items.add(item.pk)
                 else:
-                    paths[tmp_dir] = True
+                    # for file not fits take the single file only
                     wanted_items.add(item.pk)
 
             tdays_list = Tdays.objects.filter(pk__in=wanted_items)
+
+            # for item in Tdays.objects.filter(groupfilter):
+            #     tmp_dir = os.path.dirname(item.filename)
+            #     if tmp_dir in paths:
+            #         pass
+            #     else:
+            #         paths[tmp_dir] = True
+            #         wanted_items.add(item.pk)
+            #
+            # tdays_list = Tdays.objects.filter(pk__in=wanted_items)
 
             if not request.method == 'POST':
                 if 'search-persons-post' in request.session:
