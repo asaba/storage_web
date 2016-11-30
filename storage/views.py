@@ -223,7 +223,13 @@ def choisebe(request):
     if "backend" in request.session:
         del request.session["backend"]
         # request.session.modified = True
-    choise_be_form = SelectBEForm(initial={'pagination_number': 25})
+    projects = []
+    for p in AuthUserGroups.objects.all():
+        if p.user == request.user:
+            if p.group not in projects:
+                projects.append(p.group)
+    choise_be_form = SelectBEForm(initial={'pagination_number': 25,
+                                           'projects': projects})
     return render(request, 'select_BE.html', {'choise_be_form': choise_be_form})
 
 
