@@ -55,6 +55,14 @@ class AuthUser(models.Model):
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
 
+    def backendused(self):
+        backends = []
+        for g in AuthUserGroups.objects.all().filter(user=self):
+            for p in BackendUsed.objects.all().filter(project_name=g.group.name):
+                if p.backend not in backends:
+                    backends.append(p.backend)
+        return backends
+
     class Meta:
         managed = False
         db_table = 'auth_user'

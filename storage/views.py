@@ -222,14 +222,8 @@ def login_public_user(request):
 def choisebe(request):
     if "backend" in request.session:
         del request.session["backend"]
-        # request.session.modified = True
-    backends = []
-    for g in AuthUserGroups.objects.all().filter(user=request.user):
-        for p in BackendUsed.objects.all().filter(project_name=g.group.name):
-            if p.backend not in backends:
-                backends.append(p.backend)
     choise_be_form = SelectBEForm(initial={'pagination_number': 25,
-                                           'backends': backends})
+                                           'backends': request.user.backendused()})
     return render(request, 'select_BE.html', {'choise_be_form': choise_be_form})
 
 
@@ -256,9 +250,9 @@ def listing(request, message=None):
         pointing_position_radius = request.session["pointing_position_radius"]
     else:
         if request.method == 'POST':
-            form = SelectBEForm(request.POST)
+            form = SelectBEForm(request.POST, initial={'backends': request.user.backendused()})
         else:
-            form = SelectBEForm(request.GET)
+            form = SelectBEForm(request.GET, initial={'backends': request.user.backendused()})
 
         if form.is_valid():
             # you should be able to extract inputs from the form here
@@ -298,11 +292,7 @@ def listing(request, message=None):
             request.session["pointing_position_radius"] = pointing_position_radius
         else:
             backends = []
-            for g in AuthUserGroups.objects.all().filter(user=request.user):
-                for p in BackendUsed.objects.all().filter(project_name=g.group.name):
-                    if p.backend not in backends:
-                        backends.append(p.backend)
-            ChoiseBEForm = SelectBEForm(initial={"backends" : backends})
+            ChoiseBEForm = SelectBEForm(initial={"backends" : request.user.backendused()})
             return render(request, 'select_BE.html', {'ChoiseBEForm': ChoiseBEForm})
 
     user = request.user
