@@ -53,7 +53,7 @@ def fitslink_list(request, fits_file_id_list):
             for filename in builddirectoryfileslist(file_directory):
                 totalsize += os.path.getsize(filename)
 
-        if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 0:
+        if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 1:
             return listing(request, message="Too many observations selected. (Max 12GB before compression)")
         stream = StringIO()
         temp_zip_file = zipfile.ZipFile(stream, 'w')
