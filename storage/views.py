@@ -224,10 +224,9 @@ def choisebe(request):
         del request.session["backend"]
         # request.session.modified = True
     projects = []
-    for p in AuthUserGroups.objects.all():
-        if p.user == request.user:
-            if p.group not in projects:
-                projects.append(p.group)
+    for p in AuthUserGroups.objects.all().filter(user=request.user):
+        if p.group not in projects:
+            projects.append(p.group)
     choise_be_form = SelectBEForm(initial={'pagination_number': 25,
                                            'projects': projects})
     return render(request, 'select_BE.html', {'choise_be_form': choise_be_form})
@@ -297,7 +296,11 @@ def listing(request, message=None):
             request.session["pointing_position_dec"] = pointing_position_dec
             request.session["pointing_position_radius"] = pointing_position_radius
         else:
-            ChoiseBEForm = SelectBEForm()
+            projects = []
+            for p in AuthUserGroups.objects.all().filter(user=request.user):
+                if p.group not in projects:
+                    projects.append(p.group)
+            ChoiseBEForm = SelectBEForm(initial={"projects" : projects})
             return render(request, 'select_BE.html', {'ChoiseBEForm': ChoiseBEForm})
 
     user = request.user
