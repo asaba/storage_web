@@ -18,7 +18,7 @@ class SelectBEForm(Form):
             widget=forms.Select(choices=[(x, str(x)) for x in range(25, 501, 25)]), label="Results for page")
 
     def return_be_list(self):
-        be_list_choise = [(x.backend, x.backend) for x in self.initial["backends"]]
+        be_list_choise = [(x, x) for x in self.initial["backends"]]
         return be_list_choise
 
     codBE = forms.CharField(
