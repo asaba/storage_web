@@ -21,6 +21,7 @@ import os
 from os.path import basename
 
 MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES = 4000000000 * 3  # (4GB*3)
+fits_extentions = [".fits", ".rf", ".sf", ".cf"]
 
 
 def index(request):
@@ -41,17 +42,27 @@ def fitslink_list(request, fits_file_id_list):
         fitslinkpublic(request, fits_file_id_list[0])
     else:
         file_directory_list = []
+        file_single_list = []
         for fits_file_id in fits_file_id_list:
             day_record = Tdays.objects.get(pk=fits_file_id)
             tail_path = day_record.filename
-            file_directory_list.append(os.path.dirname(tail_path))
-            # filename_only = tail_path.split("/")[-1]
-            # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
+            if tail_path[-len(fits_extentions[0])] == fits_extentions[0]:
+                #fits file
+                #add directory to the list of paths
+                file_directory_list.append(os.path.dirname(tail_path))
+            else:
+                for e in fits_extentions[1:]:
+                    if tail_path[-len(e)] == e:
+                        # add file to the list of files
+                        file_single_list.append(tail_path)
 
         totalsize = 0
+        # calculate total size of directory selected
         for file_directory in file_directory_list:
             for filename in builddirectoryfileslist(file_directory):
                 totalsize += os.path.getsize(filename)
+        for fsl in file_single_list:
+            totalsize += os.path.getsize(fsl)
 
         if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 1:
             return listing(request, message="Too many observations selected. (Max 12GB before compression)")
@@ -60,6 +71,8 @@ def fitslink_list(request, fits_file_id_list):
         for file_directory in file_directory_list:
             for filename in builddirectoryfileslist(file_directory):
                 temp_zip_file.write(filename)
+        for fsl in file_single_list:
+            temp_zip_file.write(fsl)
 
         try:
             zipfilename = request.user.username.upper()  # file_directory_list[0].split("/")[-1]
