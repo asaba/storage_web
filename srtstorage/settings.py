@@ -34,6 +34,9 @@ ALLOWED_HOSTS = MY_ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = (
+    "captcha",
+    'dajaxice',
+    "storage",
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,9 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_tables2',
     # 'pure_pagination',
-    "captcha",
-    'dajaxice',
-    "storage",
+
 )
 
 PAGINATION_SETTINGS = {
@@ -121,3 +122,5 @@ STORAGE_FOLDER = MY_STORAGE_FOLDER
 RECAPTCHA_PUBLIC_KEY = MY_RECAPTCHA_PUBLIC_KEY
 
 RECAPTCHA_PRIVATE_KEY = MY_RECAPTCHA_PRIVATE_KEY
+
+LOGIN_URL = "/login/"
