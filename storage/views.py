@@ -46,13 +46,13 @@ def fitslink_list(request, fits_file_id_list):
         for fits_file_id in fits_file_id_list:
             day_record = Tdays.objects.get(pk=fits_file_id)
             tail_path = day_record.filename
-            if tail_path[-len(fits_extentions[0])] == fits_extentions[0]:
+            if tail_path[-len(fits_extentions[0]):] == fits_extentions[0]:
                 #fits file
                 #add directory to the list of paths
                 file_directory_list.append(os.path.dirname(tail_path))
             else:
                 for e in fits_extentions[1:]:
-                    if tail_path[-len(e)] == e:
+                    if tail_path[-len(e):] == e:
                         # add file to the list of files
                         file_single_list.append(tail_path)
 
