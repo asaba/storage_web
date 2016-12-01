@@ -37,7 +37,7 @@ INSTALLED_APPS = (
     "captcha",
     'dajaxice',
     "storage",
-    #'suit',
+    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
