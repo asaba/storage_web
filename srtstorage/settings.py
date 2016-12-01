@@ -16,8 +16,6 @@ from private_settings import MY_ADMIN_MEDIA_PREFIX, MY_SECRET_KEY, MY_DEBUG, MY_
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-ADMIN_MEDIA_PREFIX = MY_ADMIN_MEDIA_PREFIX
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
