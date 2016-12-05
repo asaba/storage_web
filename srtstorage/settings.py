@@ -32,9 +32,6 @@ ALLOWED_HOSTS = MY_ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = (
-    "captcha",
-    'dajaxice',
-    "storage",
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +41,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_tables2',
+    "captcha",
+    'dajaxice',
+    "storage"
     # 'pure_pagination',
 
 )
