@@ -16,7 +16,7 @@ from django_tables2 import RequestConfig
 from tables import TdaysTable_short
 from modelforms import SelectBEForm, VerifyHuman
 #from StringIO import StringIO
-from io import BytesIO
+import tempfile
 #import zipfile
 import tarfile
 import os
@@ -69,9 +69,10 @@ def fitslink_list(request, fits_file_id_list):
         if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 1:
             return listing(request, message="Too many observations selected. (Max 12GB before compression)")
         #stream = StringIO()
-        stream = BytesIO()
+        stream = tempfile.NamedTemporaryFile(delete=False)
+        stream.close()
         #temp_zip_file = zipfile.ZipFile(stream, 'w')
-        temp_tar_file = tarfile.open(stream, mode="w:")
+        temp_tar_file = tarfile.open(stream.name, mode="w:")
 
         for file_directory in file_directory_list:
             for filename in builddirectoryfileslist(file_directory):
@@ -108,9 +109,10 @@ def fitslink(request, fits_file_id):
         # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
 
         #stream = StringIO()
-        stream = BytesIO()
+        stream = tempfile.NamedTemporaryFile(delete=False)
+        stream.close()
         #temp_zip_file = zipfile.ZipFile(stream, 'w')
-        temp_tar_file = tarfile.open(stream, mode="w:")
+        temp_tar_file = tarfile.open(stream.name, mode="w:")
         for filename in builddirectoryfileslist(file_directory):
             #temp_zip_file.write(filename, arcname=basename(filename))
             temp_tar_file.add(filename)
@@ -156,9 +158,10 @@ def verify_human(request):
             # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
 
             #stream = StringIO()
-            stream = BytesIO()
+            stream = tempfile.NamedTemporaryFile(delete=False)
+            stream.close()
             #temp_zip_file = zipfile.ZipFile(stream, 'w')
-            temp_tar_file = tarfile.open(stream, mode="w:")
+            temp_tar_file = tarfile.open(stream.name, mode="w:")
 
             for filename in builddirectoryfileslist(file_directory):
                 #temp_zip_file.write(filename, arcname=basename(filename))
