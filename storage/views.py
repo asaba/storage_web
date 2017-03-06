@@ -15,7 +15,8 @@ from django.contrib.auth.decorators import login_required
 from django_tables2 import RequestConfig
 from tables import TdaysTable_short
 from modelforms import SelectBEForm, VerifyHuman
-from StringIO import StringIO
+#from StringIO import StringIO
+from io import BytesIO
 #import zipfile
 import tarfile
 import os
@@ -67,7 +68,8 @@ def fitslink_list(request, fits_file_id_list):
 
         if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 1:
             return listing(request, message="Too many observations selected. (Max 12GB before compression)")
-        stream = StringIO()
+        #stream = StringIO()
+        stream = BytesIO()
         #temp_zip_file = zipfile.ZipFile(stream, 'w')
         temp_tar_file = tarfile.open(stream, mode="w:")
 
@@ -105,7 +107,8 @@ def fitslink(request, fits_file_id):
         # filename_only = tail_path.split("/")[-1]
         # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
 
-        stream = StringIO()
+        #stream = StringIO()
+        stream = BytesIO()
         #temp_zip_file = zipfile.ZipFile(stream, 'w')
         temp_tar_file = tarfile.open(stream, mode="w:")
         for filename in builddirectoryfileslist(file_directory):
@@ -152,7 +155,8 @@ def verify_human(request):
             # filename_only = tail_path.split("/")[-1]
             # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
 
-            stream = StringIO()
+            #stream = StringIO()
+            stream = BytesIO()
             #temp_zip_file = zipfile.ZipFile(stream, 'w')
             temp_tar_file = tarfile.open(stream, mode="w:")
 
