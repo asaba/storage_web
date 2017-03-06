@@ -95,7 +95,7 @@ def fitslink_list(request, fits_file_id_list):
         #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
         response = HttpResponse(fsock, mimetype='application/x-tar')
         #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
-        response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.zip"'
+        response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.tar"'
         return response
 
 
