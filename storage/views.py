@@ -91,8 +91,9 @@ def fitslink_list(request, fits_file_id_list):
 
         #temp_zip_file.close()
         temp_tar_file.close()
+        fsock = open(stream.name, "rb")
         #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
-        response = HttpResponse(stream.getvalue(), mimetype='application/x-tar')
+        response = HttpResponse(fsock, mimetype='application/x-tar')
         #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
         response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.zip"'
         return response
@@ -126,8 +127,9 @@ def fitslink(request, fits_file_id):
 
         #temp_zip_file.close()
         temp_tar_file.close()
+        fsock = open(stream.name, "rb")
         #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
-        response = HttpResponse(stream.getvalue(), mimetype='application/x-tar')
+        response = HttpResponse(fsock, mimetype='application/x-tar')
         #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
         response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.tar"'
         return response
@@ -176,8 +178,9 @@ def verify_human(request):
 
             #temp_zip_file.close()
             temp_tar_file.close()
+            fsock = open(stream.name, "rb")
             #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
-            response = HttpResponse(stream.getvalue(), mimetype='application/x-tar')
+            response = HttpResponse(fsock, mimetype='application/x-tar')
             #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
             response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.tar"'
             request.session["fits_id"] = None
