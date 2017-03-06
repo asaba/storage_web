@@ -16,7 +16,8 @@ from django_tables2 import RequestConfig
 from tables import TdaysTable_short
 from modelforms import SelectBEForm, VerifyHuman
 from StringIO import StringIO
-import zipfile
+#import zipfile
+import tarfile
 import os
 from os.path import basename
 
@@ -67,21 +68,30 @@ def fitslink_list(request, fits_file_id_list):
         if totalsize > MAX_FILE_SIZE_BEFORE_DOWNLOAD_BYTES and len(fits_file_id_list) > 1:
             return listing(request, message="Too many observations selected. (Max 12GB before compression)")
         stream = StringIO()
-        temp_zip_file = zipfile.ZipFile(stream, 'w')
+        #temp_zip_file = zipfile.ZipFile(stream, 'w')
+        temp_tar_file = tarfile.open(stream, mode="w:")
+
         for file_directory in file_directory_list:
             for filename in builddirectoryfileslist(file_directory):
-                temp_zip_file.write(filename)
+                #temp_zip_file.write(filename)
+                temp_tar_file.add(filename)
         for fsl in file_single_list:
-            temp_zip_file.write(fsl)
+            #temp_zip_file.write(fsl)
+            temp_tar_file.add(fsl)
 
         try:
-            zipfilename = request.user.username.upper()  # file_directory_list[0].split("/")[-1]
+            #zipfilename = request.user.username.upper()  # file_directory_list[0].split("/")[-1]
+            temp_tar_filename = request.user.username.upper()
         except:
-            zipfilename = "SRTData"
+            #zipfilename = "SRTData"
+            temp_tar_filename = "SRTData"
 
-        temp_zip_file.close()
-        response = HttpResponse(stream.getvalue(), mimetype='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
+        #temp_zip_file.close()
+        temp_tar_file.close()
+        #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
+        response = HttpResponse(stream.getvalue(), mimetype='application/x-tar')
+        #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
+        response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.zip"'
         return response
 
 
@@ -96,19 +106,25 @@ def fitslink(request, fits_file_id):
         # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
 
         stream = StringIO()
-        temp_zip_file = zipfile.ZipFile(stream, 'w')
-
+        #temp_zip_file = zipfile.ZipFile(stream, 'w')
+        temp_tar_file = tarfile.open(stream, mode="w:")
         for filename in builddirectoryfileslist(file_directory):
-            temp_zip_file.write(filename, arcname=basename(filename))
+            #temp_zip_file.write(filename, arcname=basename(filename))
+            temp_tar_file.add(filename)
 
         try:
-            zipfilename = file_directory.split("/")[-1]
+            #zipfilename = file_directory.split("/")[-1]
+            temp_tar_filename = file_directory.split("/")[-1]
         except:
-            zipfilename = "SRTData"
+            #zipfilename = "SRTData"
+            temp_tar_filename = "SRTData"
 
-        temp_zip_file.close()
-        response = HttpResponse(stream.getvalue(), mimetype='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
+        #temp_zip_file.close()
+        temp_tar_file.close()
+        #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
+        response = HttpResponse(stream.getvalue(), mimetype='application/x-tar')
+        #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
+        response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.tar"'
         return response
 
 
@@ -137,19 +153,26 @@ def verify_human(request):
             # return HttpResponseRedirect("http://srtmain.oa-cagliari.inaf.it/static" + tail_path)
 
             stream = StringIO()
-            temp_zip_file = zipfile.ZipFile(stream, 'w')
+            #temp_zip_file = zipfile.ZipFile(stream, 'w')
+            temp_tar_file = tarfile.open(stream, mode="w:")
 
             for filename in builddirectoryfileslist(file_directory):
-                temp_zip_file.write(filename, arcname=basename(filename))
+                #temp_zip_file.write(filename, arcname=basename(filename))
+                temp_tar_file.add(filename)
 
             try:
-                zipfilename = file_directory.split("/")[-1]
+                #zipfilename = file_directory.split("/")[-1]
+                temp_tar_filename = file_directory.split("/")[-1]
             except:
-                zipfilename = "SRTData"
+                #zipfilename = "SRTData"
+                temp_tar_filename = "SRTData"
 
-            temp_zip_file.close()
-            response = HttpResponse(stream.getvalue(), mimetype='application/zip')
-            response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
+            #temp_zip_file.close()
+            temp_tar_file.close()
+            #response = HttpResponse(stream.getvalue(), mimetype='application/zip')
+            response = HttpResponse(stream.getvalue(), mimetype='application/x-tar')
+            #response['Content-Disposition'] = 'attachment; filename="' + zipfilename + '.zip"'
+            response['Content-Disposition'] = 'attachment; filename="' + temp_tar_filename + '.tar"'
             request.session["fits_id"] = None
             return response
         else:
